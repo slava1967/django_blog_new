@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="col-md-12 mb-4 mt-3 left top">
+<div class="mb-4 mt-3 left top">
     <article class="blog-post">
         <h1 class="display-5 link-body-emphasis mb-1">{% block title %} {{ post.title }} {% endblock title %}</h1>
         <p class="blog-post-meta">{{ post.created_on|date:"d.m.Y" }}</p>
@@ -28,15 +28,25 @@
     <div>
         <h2 class="subtitle is-4">Комментарии:</h2>
     </div>
-    {% include 'posts/comment-form.html' %}
-    {% include "posts/comments/comments-container.html" %}
+    {% if user.is_authenticated %}
+        {% include 'posts/comment-form.html' %}
+    {% else %}
+        <div class="pt-3 mb-3">
+            <div class="media-content">Комментарии могут оставлять зарегистрированные пользователи. -
+                <button hx-get="{% url 'users:user_login_inner' %}" hx-target="#dialog" class="btn btn-link">
+                    Авторизация
+                </button>
+            </div>
+        </div>
+    {% endif %}
+        {% include "posts/comments/comments-container.html" %}
     {% comment %} <div id="post-comment">
         <div hx-get="{% url 'posts:comment_form' post.slug %}" hx-trigger="load, userAuthenticated from:body">
         <div hx-get="{% url 'posts:comment_detail' post.pk %}" hx-trigger="load">
         </div>
     </div> {% endcomment %}
     {% comment %} <div hx-get="{% url 'posts:post_comments' post.slug %}" hx-trigger="load" class="main-comment-section"> {% endcomment %}
-    </div>
+    {% comment %} </div> {% endcomment %}
 </div>
 {% comment %} <script type="text/javascript" src="{% static 'vendor/js/social.js' %}"></script>
 <script src="https://kit.fontawesome.com/1d71f92e0a.js" crossorigin="anonymous"></script> {% endcomment %}

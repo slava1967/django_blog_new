@@ -1,16 +1,14 @@
 {% load tag_categories %}
 
-<div>
-    <div class="p-4 mb-3 bg-body-tertiary rounded">
-        <h4 class="fst-italic">Категории:</h4>
-        {% tag_categories as categories %}
-        <ul class="list-unstyled">
-            {% for category in categories %}
-            <li>
-                <a class="nav-item nav-link link-body-emphasis pb-2"
-                   href="{% url 'posts:category_detail' category.slug %}">{{ category.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div class="p-4 mb-3 bg-body-tertiary rounded">
+    <h4 class="fst-italic">Категории:</h4>
+    {% tag_categories as categories %}
+    <ul class="list-unstyled">
+        {% for category in categories %}
+        <li>
+            <a class="nav-item nav-link link-body-emphasis pb-2"
+                href="{% url 'posts:category_detail' category.slug %}">{{ category.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
