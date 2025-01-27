@@ -1,0 +1,9 @@
+{% load crispy_forms_tags %}
+
+<form hx-post="{% url 'posts:reply_form' reply.pk %}" hx-swap="outerHTML" class="mb-6" id="reply-form">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div>
+        <button type="submit" class="btn btn-bd-primary my-2 my-sm-0">Отправить</button>
+    </div>
+</form>

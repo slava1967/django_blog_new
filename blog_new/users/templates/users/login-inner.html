@@ -1,0 +1,49 @@
+{% load crispy_forms_tags %}
+
+{% comment %} <div class="form-group">
+    <form id="login_inner" action="{% url 'users:user_login_inner' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-bd-primary" type="submit">Вход</button>
+    </form>
+</div> {% endcomment %}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Авторизация</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form hx-post="{% url "users:user_login_inner" %}">
+        {% comment %} <form action="{% url "users:login" %}" method="post"> {% endcomment %}
+            {% comment %} {% csrf_token %} {% endcomment %}
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value={{ request.GET.next }}>
+            {% endif %}
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Имя пользователя</label>
+                <input type="text"
+                class="form-control"
+                value="{% if form.username.value %}{{ form.username.value }}{% endif %}" name="username" id="id_username" placeholder="Введите ваше имя пользователя" required>
+            </div>
+            <div class="mb-3">
+                <label for="id_password" class="form-label">Пароль</label>
+                <input type="password" class="form-control" name="password" id="id_password" placeholder="Введите ваш пароль" required>
+            </div>
+            <button
+                type="submit"
+                data-bs-dismiss="modal"
+                {% comment %} data-target="#addModal" {% endcomment %}
+                class="btn btn-bd-primary btn-block"
+                {% comment %} hx-get="{% url 'posts:comment_form' post.pk %}"
+                hx-target="#comment-form" {% endcomment %}
+                {% comment %} hx-swap="outerHTML" {% endcomment %}
+                >
+                <small>Авторизация</small>
+            </button>
+        </form>
+        <div class="modal-footer">
+            <a href="{% url 'users:password_reset' %}">Забыли пароль? </a> | <a href="{% url "users:register" %}"> Создать аккаунт</a>
+        </div>
+    </div>
+</div>

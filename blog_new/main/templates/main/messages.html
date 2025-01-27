@@ -1,0 +1,33 @@
+{% if messages %}
+
+{% for message in messages %}
+{% if 'subscribe' in message.tags %}
+<div id="subscribe-success" class="alert alert-success alert-dismissible">
+    {{ message }}
+    <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            hx-get="{% url 'main:subscribe' %}"
+            hx-target="#subscribe-success"
+            hx-swap="outerHTML"
+    >
+    </button>
+</div>
+{% elif 'comment' in message.tags %}
+<div id="comment-success" class="alert alert-success alert-dismissible">
+    {{ message }}
+    <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            hx-get="{% url 'comment-form' category_slug slug %}"
+            hx-target="#comment-success"
+            hx-swap="outerHTML"
+    >
+    </button>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endif %}

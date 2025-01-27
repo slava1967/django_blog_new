@@ -1,0 +1,21 @@
+{% load crispy_forms_tags %}
+<div id="comment_like{{ comment.pk }}">
+    <button
+        hx-post="{% url 'posts:comment_like' comment.pk %}"
+        hx-target="#comment_like{{ comment.pk }}"
+        hx-swap="innerHTML"
+        class="remove-default-btn p-0 border-0 bg-transparent"
+    >
+        <i class="far fa-thumbs-up" data-toggle="tooltip" data-placement="top" title="Нравится"></i>
+        <span class="me-3">{{ comment.like_count }}</span>
+    </button>
+    <button
+        hx-post="{% url 'posts:comment_dislike' comment.pk %}"
+        hx-target="#comment_like{{ comment.pk }}"
+        hx-swap="innerHTML"
+        class="remove-default-btn p-0 border-0 bg-transparent"
+    >
+        <i class="far fa-thumbs-down" data-toggle="tooltip" data-placement="top" title="Не нравится"></i>
+        <span class="me-3">{{ comment.dislike_count }}</span>
+    </button>
+</div>

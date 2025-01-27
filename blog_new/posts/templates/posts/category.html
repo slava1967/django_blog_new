@@ -1,0 +1,50 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Категории | {{ category.title }}{% endblock %}
+
+{% block content %}
+
+<h1>Статьи в категории "{{ category.title }}"</h1>
+<div class="col-md-12 mt-3 left">
+    {% for post in posts %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{ post.title }}</h2>
+            <p class="card-text text-muted h6">{{ post.created_at|date:"d.m.Y" }} </p>
+            <p class="card-text">{{ post.intro|safe }}</p>
+            <a href="{% url 'posts:post_detail' post.category.slug post.slug  %}" class="btn btn-bd-primary my-2 my-sm-0">Читать
+                &rarr;</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="content">
+        <p>В этой категории нет статей...</p>
+    </div>
+    {% endfor %}
+
+    <ul class="pagination justify-content-center flex-wrap mt-2 mb-4">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+        {% endif %}
+        {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
+        {% if page_obj.number == i %}
+        <li class="page-item"><span class="page-link active">{{ i }} </span>
+        </li>
+        {% else %}
+        {% if i == page_obj.paginator.ELLIPSIS %}
+        <li class="page-item"><span class="page-link">{{ i }}</span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+        {% endif %}
+    </ul>
+</div>
+{%endblock%}

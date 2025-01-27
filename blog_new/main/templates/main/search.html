@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Search | {% endblock %}
+
+{% block content %}
+<h1>Результаты поиска по запросу "{{ query }}"</h1>
+<div class="container">
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8 mt-3 left min-vh-100">
+            {% for post in posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text text-muted h6">{{ post.created_at|date:"d.m.Y" }} </p>
+                    <p class="card-text">{{ post.body|truncatewords_html:50|safe }}</p>
+                    <a href="{% url 'post_detail' post.category.slug post.slug  %}" class="btn btn-primary">Читать
+                        &rarr;</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="content">
+                <p>По данному запросу статей не найдено...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{%endblock%}

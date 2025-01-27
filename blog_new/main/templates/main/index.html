@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <h1 class="text-body-emphasis">Basic jumbotron</h1>
+        <p class="lead">
+            This is a simple Bootstrap jumbotron that sits within a <code>.container</code>, recreated with built-in
+            utility classes.
+        </p>
+    </div>
+</div>
+<!-- Blog Entries Column -->
+{% include "posts/posts-list.html" %}
+
+<ul class="pagination justify-content-center flex-wrap mt-2 mb-4">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+    {% endif %}
+    {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
+    {% if page_obj.number == i %}
+    <li class="page-item"><span class="page-link active">{{ i }} </span>
+    </li>
+    {% else %}
+    {% if i == page_obj.paginator.ELLIPSIS %}
+    <li class="page-item"><span class="page-link">{{ i }}</span></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+    <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+    {% endif %}
+</ul>
+
+{%endblock%}

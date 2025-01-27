@@ -1,0 +1,13 @@
+{% load show_subscribe_form %}
+
+<footer class="pt-3 mt-auto">
+    <div class="col-md-5 offset-md-1 mb-5 mx-auto text-center border-bottom">
+        <div class="d-flex flex-row">
+            <h5>Subscribe to our newsletter</h5>
+            {% show_subscribe_form %}
+        </div>
+        <p class="text-center text-body-secondary h6">&copy; {% now "Y" %} Материалы распространяются по открытой
+            лицензии CC
+            BY-SA 4.0</p>
+    </div>
+</footer>

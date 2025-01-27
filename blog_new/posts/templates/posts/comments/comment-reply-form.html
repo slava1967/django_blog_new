@@ -1,0 +1,17 @@
+{% load crispy_forms_tags %}
+{% comment %} <div class="row mt-3 mb-5 reply-content d-none" id="{{ comment.pk }}"> {% endcomment %}
+{% comment %} <form hx-post="{% url 'posts:comment_reply_form' comment.pk %}" hx-swap="outerHTML" class="mb-6" id="reply-form">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div>
+        <button type="submit" class="btn btn-bd-primary my-2 my-sm-0">Отправить</button>
+    </div>
+</form> {% endcomment %}
+{% comment %} </div> {% endcomment %}
+<form hx-post="{% url 'posts:comment_reply_form' comment.pk %}" hx-target="this" hx-swap="outerHTML" class="mb-6">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div>
+        <button type="submit" class="btn btn-bd-primary my-2 my-sm-0">Отправить</button>
+    </div>
+</form>

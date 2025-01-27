@@ -1,0 +1,21 @@
+{% load crispy_forms_tags %}
+<div id="reply_like{{ reply.pk }}">
+    <button
+        hx-post="{% url 'posts:reply_like' reply.pk %}"
+        hx-target="#reply_like{{ reply.pk }}"
+        hx-swap="innerHTML"
+        class="remove-default-btn p-0 border-0 bg-transparent"
+    >
+        <i class="far fa-thumbs-up" data-toggle="tooltip" data-placement="top" title="Нравится"></i>
+        <span class="me-3">{{ reply.like_count }}</span>
+    </button>
+    <button
+        hx-post="{% url 'posts:reply_dislike' reply.pk %}"
+        hx-target="#reply_like{{ reply.pk }}"
+        hx-swap="innerHTML"
+        class="remove-default-btn p-0 border-0 bg-transparent"
+    >
+        <i class="far fa-thumbs-down" data-toggle="tooltip" data-placement="top" title="Не нравится"></i>
+        <span class="me-3">{{ reply.dislike_count }}</span>
+    </button>
+</div>

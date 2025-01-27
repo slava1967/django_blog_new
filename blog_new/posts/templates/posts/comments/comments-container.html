@@ -1,0 +1,65 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% for comment in post.comments.all %}
+    <div class="row mt-3 bg-body-tertiary">
+        {% include './comment-detail.html' %}
+        {% comment %} <div class="row">
+            <div class="col">
+                <div class="d-flex flex-start">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}"
+                            alt="Аватар пользователя" class="rounded-circle shadow-1-strong me-3"
+                            width="35"
+                            height="35">
+                    {% else %}
+                        <img src="{% static "vendor/images/baseavatar.jpg" %}"
+                            alt="Аватар пользователя" class="rounded-circle shadow-1-strong me-3"
+                            width="35"
+                            height="35">
+                    {% endif %}
+                    <div class="flex-grow-1 flex-shrink-1">
+                        <div id="comment{{ comment.pk }}">
+                            <div class="d-flex justify-content-between align-items-center">
+                            <p class="mb-1">
+                                {{ comment.author }} <span class="small">- {{ comment.created_on }}</span>
+                            </p>
+                            </div>
+                            <p class="small mb-0">
+                                {{ comment.content }}
+                            </p>
+                            {% if user.is_authenticated %}
+                            <div class="small d-flex justify-content-start mt-3">
+                                {% if request.user == comment.author %}
+                                    <span class="mx-3"
+                                        style="cursor: pointer; color:var(--bs-body-color);"
+                                        hx-delete="{% url 'posts:comment_detail' comment.pk %}"
+                                        hx-target="#comment{{ comment.pk }}"
+                                        hx-confirm="Are you sure you wish to delete?">
+                                            <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
+                                            title="Удалить комментарий"></i>
+                                    </span>
+                                {% else %}
+                                    {% include './comment-like.html' %}
+                                    <button class="reply-btn remove-default-btn p-0 border-0 bg-transparent"
+                                            data-toggle="tooltip"
+                                            data-placement="top" title="Ответить">
+                                        <i class="far fa-comment-dots" onclick="commentReplyToggle('{{ comment.pk }}')"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="row mt-3 mb-5 reply-content d-none" id="{{ comment.pk }}">
+                                {% include 'posts/comments/comment-reply-form.html' %}
+                            </div>
+                            <hr>
+                            {% endif %}
+                        </div>
+                        {% for reply in comment.replies.all %}
+                            {% include './reply-detail.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    </div>
+{% endfor %}

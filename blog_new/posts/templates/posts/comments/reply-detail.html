@@ -1,0 +1,145 @@
+{% load static %}
+
+<div class="d-flex flex-start mt-4" id="reply{{ reply.pk }}">
+    {% if user.image %}
+    <a class="me-3" href="#">
+        <img src="{{ user.image.url }}"
+            alt="Аватар пользователя" class="rounded-circle shadow-1-strong me-3"
+            width="35"
+            height="35"></a>
+    {% else %}
+    <a class="me-3" href="#">
+        <img src="{% static "vendor/images/baseavatar.jpg" %}"
+            alt="Аватар пользователя" class="rounded-circle shadow-1-strong me-3"
+            width="35"
+            height="35"></a>
+    {% endif %}
+    <div class="flex-grow-1 flex-shrink-1">
+        <div id="reply{{ reply.pk }}">
+            <div class="d-flex justify-content-between align-items-center">
+            <p class="mb-1">
+                {{ reply.author.username }} <span class="small">- {{ reply.created }}</span>
+            </p>
+            </div>
+            <p class="small mb-0">
+                {{ reply.content }}
+            </p>
+            {% if user.is_authenticated %}
+                <div class="small d-flex justify-content-start mt-3">
+                    {% if request.user == reply.author %}
+                        <span class="mx-3"
+                            style="cursor: pointer; color:var(--bs-body-color);"
+                            hx-delete="{% url 'posts:reply_detail' reply.pk %}"
+                            hx-target="#reply{{ reply.pk }}"
+                            hx-confirm="Are you sure you wish to delete?">
+                                <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
+                                title="Удалить комментарий"></i>
+                        </span>
+                    {% else %}
+                        {% include './reply-like.html' %}
+                        {% comment %} <button class="reply-btn remove-default-btn p-0 border-0 bg-transparent"
+                            data-toggle="tooltip"
+                            data-placement="top" title="Ответить">
+                            <i class="far fa-comment-dots" onclick="commentReplyToggle('{{ reply.pk }}')"></i>
+                        </button> {% endcomment %}
+                    {% endif %}
+                </div>
+                {% comment %} <div class="row mt-3 mb-5 d-none">
+                    {% include 'posts/comments/reply-reply-form.html' %}
+                </div> {% endcomment %}
+                <hr>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% comment %} <div class="d-flex flex-start mt-3">
+    <div class="flex-grow-1 flex-shrink-1">
+        <div id="reply{{ reply.pk }}">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="small mb-2">
+                    {{ reply.author.username }} <span class="small">- {{ reply.created }}</span>
+                </p>
+            </div>
+            <p class="mb-0">
+                {{ reply.content }}
+            </p>
+            {% if user.is_authenticated %}
+                <div class="small d-flex justify-content-start mt-3">
+                    {% if request.user == reply.author %}
+                        <span class="mx-3"
+                            style="cursor: pointer; color:var(--bs-body-color);"
+                            hx-delete="{% url 'posts:reply_detail' post.category.slug post.slug reply.pk %}"
+                            hx-target="#reply{{ reply.pk }}"
+                            hx-confirm="Are you sure you wish to delete?">
+                                <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
+                                title="Удалить комментарий"></i>
+                        </span>
+                    {% else %}
+                        {% include './reply-like.html' %} {% endcomment %}
+                        {% comment %} <a href="#!" class="d-flex align-items-center me-3">
+                        <i class="fas fa-share me-2"></i>
+                        <p class="mb-0">Share</p>
+                        </a> {% endcomment %}
+                        {% comment %} <button class="reply-btn remove-default-btn p-0 border-0 bg-transparent"
+                                data-toggle="tooltip"
+                                data-placement="top" title="Ответить">
+                            <i class="far fa-comment-dots" onclick="commentReplyToggle('{{ comment.pk }}')"></i>
+                        </button> {% endcomment %}
+                    {% comment %} {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div> {% endcomment %}
+
+{% comment %} <reply class="flex items-end justify-between py-4 border-t">
+    <div class="flex">
+        <div class="w-fit">
+            <a class="block" href="">
+                <span class="text-sm text-gray-400">@{{ reply.author.username }} - {{ reply.created }}</span>
+            </a>
+            <div class="mr-3">{{ reply.content }}</div>
+        </div>
+    </div>
+    <div class="d-flex flex-row mt-2">
+        {% if request.user == reply.author %}
+        {% include './comment-like.html' %}
+        <a href="{% url 'posts:comment_delete' post.category.slug post.slug comment.pk %}"
+        class="mx-3" style="color:var(--bs-body-color);"><i
+                class="fa fa-trash" data-toggle="tooltip" data-placement="top"
+                title="Удалить комментарий"></i>
+        </a>
+        <span class="mx-3"
+            style="cursor: pointer; color:var(--bs-body-color);"
+            hx-delete="{% url 'posts:reply_detail' post.category.slug post.slug comment.pk %}"
+            hx-target="#reply{{ reply.pk }}"
+            hx-confirm="Are you sure you wish to delete?">
+                <i class="fa fa-trash" data-toggle="tooltip" data-placement="top"
+                title="Удалить комментарий"></i>
+        </span>
+        {% else %}
+        <form method="POST" action="{% url 'posts:comment_like' post.category.slug post.slug comment.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button class="remove-default-btn p-0 border-0 bg-transparent" type="submit">
+                <i class="far fa-thumbs-up"> <span>{{ comment.likes.all.count }}</span></i>
+            </button>
+        </form>
+
+        <form method="POST"
+            action="{% url 'posts:comment_dislike' post.category.slug post.slug comment.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button class="remove-default-btn p-0 border-0 bg-transparent mx-3" type="submit">
+                <i class="far fa-thumbs-down"> <span>{{ comment.dislikes.all.count }}</span></i>
+            </button>
+        </form>
+        <button class="reply-btn remove-default-btn p-0 border-0 bg-transparent"
+                data-toggle="tooltip"
+                data-placement="top" title="Ответить">
+            <i class="far fa-comment-dots" onclick="commentReplyToggle('{{ comment.pk }}')"></i>
+        </button>
+        {% endif %}
+    </div>
+</reply> {% endcomment %}

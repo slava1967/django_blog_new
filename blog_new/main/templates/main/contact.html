@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="col-md-8 mb-4 mt-3 mx-auto left top">
+    <h1>Напишите нам...</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-bd-primary mt-3">Отправить!</button>
+    </form>
+</div>
+
+{% endblock content %}

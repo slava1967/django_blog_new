@@ -1,0 +1,48 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-12 mb-4 mt-3 left top">
+    <article class="blog-post">
+        <h1 class="display-5 link-body-emphasis mb-1">{% block title %} {{ post.title }} {% endblock title %}</h1>
+        <p class="blog-post-meta">{{ post.created_on|date:"d.m.Y" }}</p>
+        <p>{{ post.body|safe }}</p>
+    </article>
+    <p>Категория: <a href="{% url 'posts:category_detail' post.category.slug %}">{{ post.category }}</a>
+    </p>
+    <div class="d-flex flex-row">
+        {% if user.is_authenticated %}
+        <div id="likesarea">
+            {% include 'posts/post-like.html' %}
+        </div>
+        {% else %}
+        <a class="btn btn-link p-0 border-0 bg-transparent login_inner" data-toggle="modal"
+           data-target="#form-modal">
+            <i class="far fa-thumbs-up mx-2"> <span>{{ post.like_count }}</span></i>
+        </a>
+        {% endif %}
+    </div>
+    <hr>
+    <div>
+        <h2 class="subtitle is-4">Комментарии:</h2>
+    </div>
+    {% include 'posts/comment-form.html' %}
+    {% include "posts/comments/comments-container.html" %}
+    {% comment %} <div id="post-comment">
+        <div hx-get="{% url 'posts:comment_form' post.slug %}" hx-trigger="load, userAuthenticated from:body">
+        <div hx-get="{% url 'posts:comment_detail' post.pk %}" hx-trigger="load">
+        </div>
+    </div> {% endcomment %}
+    {% comment %} <div hx-get="{% url 'posts:post_comments' post.slug %}" hx-trigger="load" class="main-comment-section"> {% endcomment %}
+    </div>
+</div>
+{% comment %} <script type="text/javascript" src="{% static 'vendor/js/social.js' %}"></script>
+<script src="https://kit.fontawesome.com/1d71f92e0a.js" crossorigin="anonymous"></script> {% endcomment %}
+<script>
+    document.body.addEventListener('htmx:configRequest', (e) => {
+      e.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+      })
+</script>
+{% endblock content %}
